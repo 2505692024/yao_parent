@@ -28,6 +28,7 @@ import java.util.List;
 @Api("讲师管理")
 @RestController
 @RequestMapping("/eduservice/edu_teacher")
+@CrossOrigin
 public class EduTeacherController {
     @Resource
     private EduTeacherService eduTeacherService;
@@ -93,6 +94,7 @@ public class EduTeacherController {
             //小于等于创建时间
             wrapper.le("gmt_create", eduTeacherVo.getEnd());
         }
+        wrapper.orderByDesc("gmt_create");
         eduTeacherService.page(teacherPage, wrapper);
         Long total = teacherPage.getTotal();
         List<EduTeacher> records = teacherPage.getRecords();
