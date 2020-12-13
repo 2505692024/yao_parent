@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import org.junit.Test;
 
 /**
- * @author
+ * @author yaoheng
  * @since 2018/12/13
  */
 public class CodeGenerator {
@@ -40,7 +40,7 @@ public class CodeGenerator {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/yao_edu?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimeZone=GMT%2B");
+        dsc.setUrl("jdbc:mysql://localhost:3306/yao_edu?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("123456");
@@ -59,7 +59,7 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("edu_teacher");
+        strategy.setInclude("edu_subject");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 
