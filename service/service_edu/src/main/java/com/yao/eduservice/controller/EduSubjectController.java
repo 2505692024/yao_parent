@@ -22,7 +22,7 @@ import java.util.List;
  * @author yaoheng
  * @since 2020-12-12
  */
-@Api(value = "课程分类管理")
+@Api(value = "课程分类管理", description = "课程分类管理")
 @RestController
 @RequestMapping("/eduservice/edu-subject")
 @CrossOrigin
@@ -30,18 +30,18 @@ public class EduSubjectController {
     @Resource
     private EduSubjectService eduSubjectServicel;
 
-    @ApiOperation(value = "添加课程分类")
+    @ApiOperation(value = "/addSubject", notes = "添加课程分类")
     @PostMapping("/addSubject")
     public Result addSubject(MultipartFile file) {
         eduSubjectServicel.saveEduSubject(file, eduSubjectServicel);
         return Result.ok();
     }
 
-    @ApiOperation(value = "获取课程列表")
+    @ApiOperation(value = "/getSubjectList", notes = "获取课程分类列表")
     @GetMapping("/getSubjectList")
     public Result SubjectTreeList() {
         List<OneSubject> list = eduSubjectServicel.getSubjectTreeList();
-        return Result.ok().data("data",list);
+        return Result.ok().data("data", list);
     }
 }
 
