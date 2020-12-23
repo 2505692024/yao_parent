@@ -2,6 +2,7 @@ package com.yao.eduservice.entity.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.math.BigDecimal;
 
 /**
@@ -18,6 +19,9 @@ public class EduCourseVo {
 
     @ApiModelProperty(value = "课程专业ID")
     private String subjectId;
+
+    @ApiModelProperty(value = "一级菜单id")
+    private String subjectParentId;
 
     @ApiModelProperty(value = "课程标题")
     private String title;

@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -30,8 +31,28 @@ public class EduCourseController {
     @ResponseBody
     @ApiOperation(notes = "添加课程分类", value = "/addCourseInfo")
     private Result addCourseInfo(@RequestBody EduCourseVo eduCourseVo) {
-        eduCourseService.saveCourse(eduCourseVo);
-        return Result.ok();
+        //返回成功后的id
+        String cid = eduCourseService.saveCourse(eduCourseVo);
+        return Result.ok().data("courseId", cid);
+    }
+
+    @ApiOperation(notes = "根据id查询课程信息", value = "/getCourseInfo/{courseId}")
+    @GetMapping("/getCourseInfo/{courseId}")
+    @ResponseBody
+    public Result getCourseInfo(@PathVariable String courseId) {
+        EduCourseVo eduCourseVo = eduCourseService.getCourseInfo(courseId);
+        return Result.ok().data("data", eduCourseVo);
+    }
+
+    @ApiOperation(notes = "修改课程信息", value = "/getCourseInfo/{courseId}")
+    @PostMapping("/updateCourse")
+    public Result updateCourse(@RequestBody EduCourseVo eduCourseVo) {
+        int i = eduCourseService.updateCourse(eduCourseVo);
+        if (i == 0) {
+            return Result.error().message("修改失败");
+        } else {
+            return Result.ok().message("修改成功");
+        }
     }
 }
 

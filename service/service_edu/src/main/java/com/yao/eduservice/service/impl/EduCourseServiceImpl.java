@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -30,14 +31,15 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
     private EduCourseDescriptionMapper eduCourseDescriptionMapper;
 
     @Override
-    public void saveCourse(EduCourseVo eduCourseVo) {
+    public String saveCourse(EduCourseVo eduCourseVo) {
         EduCourse eduCourse = new EduCourse();
+        String cid = null;
         BeanUtils.copyProperties(eduCourseVo, eduCourse);
         int insert = eduCourseMapper.insert(eduCourse);
         if (insert == 0) {
             throw new RuntimeException("添加失败");
         } else {
-            String cid = eduCourse.getId();
+            cid = eduCourse.getId();
             EduCourseDescription eduCourseDescription = new EduCourseDescription();
             eduCourseDescription.setId(cid);
             eduCourseDescription.setDescription(eduCourseVo.getDescription());
@@ -46,6 +48,31 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
                 throw new RuntimeException("添加失败");
             }
         }
+        return cid;
+    }
 
+    @Override
+    public EduCourseVo getCourseInfo(String courseId) {
+        //根据id查询课程信息
+        EduCourse eduCourse = eduCourseMapper.selectById(courseId);
+        EduCourseDescription eduCourseDescription = eduCourseDescriptionMapper.selectById(courseId);
+        EduCourseVo eduCourseVo = new EduCourseVo();
+        BeanUtils.copyProperties(eduCourse, eduCourseVo);
+        eduCourseVo.setDescription(eduCourseDescription.getDescription());
+        return eduCourseVo;
+    }
+
+    @Override
+    public int updateCourse(EduCourseVo eduCourseVo) {
+        EduCourse eduCourse = new EduCourse();
+        BeanUtils.copyProperties(eduCourseVo, eduCourse);
+        int i = eduCourseMapper.updateById(eduCourse);
+        if (i != 0) {
+            EduCourseDescription eduCourseDescription = new EduCourseDescription();
+            BeanUtils.copyProperties(eduCourseVo, eduCourseDescription);
+            return eduCourseDescriptionMapper.updateById(eduCourseDescription);
+        } else {
+            throw new RuntimeException("修改失败");
+        }
     }
 }
