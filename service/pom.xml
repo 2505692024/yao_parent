@@ -14,6 +14,8 @@
     <modules>
         <module>service_edu</module>
         <module>service_oss</module>
+        <module>service_vod</module>
+        <module>service_trt</module>
     </modules>
 
     <dependencies>
@@ -22,11 +24,11 @@
             <groupId>com.yao</groupId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.yao</groupId>-->
-<!--            <artifactId>common_utils</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.yao</groupId>-->
+        <!--            <artifactId>common_utils</artifactId>-->
+        <!--            <version>0.0.1-SNAPSHOT</version>-->
+        <!--        </dependency>-->
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.cloud</groupId>-->
         <!--            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->

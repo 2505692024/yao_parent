@@ -1,10 +1,16 @@
 package com.yao.eduservice.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yao.eduservice.entity.EduChapter;
 import com.yao.eduservice.entity.EduCourse;
 import com.yao.eduservice.entity.EduCourseDescription;
+import com.yao.eduservice.entity.EduVideo;
 import com.yao.eduservice.entity.vo.EduCourseVo;
+import com.yao.eduservice.entity.vo.EduPulishVo;
+import com.yao.eduservice.mapper.EduChapterMapper;
 import com.yao.eduservice.mapper.EduCourseDescriptionMapper;
 import com.yao.eduservice.mapper.EduCourseMapper;
+import com.yao.eduservice.mapper.EduVideoMapper;
 import com.yao.eduservice.service.EduCourseDescriptionService;
 import com.yao.eduservice.service.EduCourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,6 +35,10 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
     private EduCourseMapper eduCourseMapper;
     @Resource
     private EduCourseDescriptionMapper eduCourseDescriptionMapper;
+    @Resource
+    private EduChapterMapper eduChapterMapper;
+    @Resource
+    private EduVideoMapper eduVideoMapper;
 
     @Override
     public String saveCourse(EduCourseVo eduCourseVo) {
@@ -75,4 +85,30 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
             throw new RuntimeException("修改失败");
         }
     }
+
+    @Override
+    public EduPulishVo getSubjectAllList(String courseId) {
+
+        return eduCourseMapper.getAllSubjectById(courseId);
+    }
+
+    @Override
+    public int pulishCourse(String courseId) {
+        EduCourse eduCourse = eduCourseMapper.selectById(courseId);
+        eduCourse.setStatus("Normal");
+        return eduCourseMapper.updateById(eduCourse);
+    }
+
+    @Override
+    public int removeCourse(String courseId) {
+        //删除对应章节
+        eduChapterMapper.delete(new QueryWrapper<EduChapter>().eq("course_id",courseId));
+        //删除对应小节
+        eduVideoMapper.delete(new QueryWrapper<EduVideo>().eq("course_id",courseId));
+        //删除对应简介
+        eduCourseDescriptionMapper.delete(new QueryWrapper<EduCourseDescription>().eq("id",courseId));
+        //删除本身
+        return eduCourseMapper.deleteById(courseId);
+    }
+
 }
