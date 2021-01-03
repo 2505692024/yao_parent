@@ -1,6 +1,8 @@
 package com.yao.eduservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yao.eduservice.client.VodClient;
+import com.yao.eduservice.controller.EduVideoController;
 import com.yao.eduservice.entity.EduChapter;
 import com.yao.eduservice.entity.EduVideo;
 import com.yao.eduservice.entity.chapter.ChapterVo;
@@ -9,9 +11,11 @@ import com.yao.eduservice.mapper.EduChapterMapper;
 import com.yao.eduservice.mapper.EduVideoMapper;
 import com.yao.eduservice.service.EduChapterService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yao.eduservice.service.EduVideoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ public class EduChapterServiceImpl extends ServiceImpl<EduChapterMapper, EduChap
     private EduChapterMapper eduChapterMapper;
     @Resource
     private EduVideoMapper eduVideoMapper;
+    @Resource
+    private VodClient vodClient;
 
     @Override
     public List<ChapterVo> getCourseOutlineList(String courseId) {
@@ -74,11 +80,15 @@ public class EduChapterServiceImpl extends ServiceImpl<EduChapterMapper, EduChap
     public int deleteChapterById(String chapterId) {
         //判断章节下是否有小节，有则不删
         List<EduVideo> eduVideos = eduVideoMapper.selectList(new QueryWrapper<EduVideo>().eq("chapter_id", chapterId));
-        if (eduVideos.isEmpty()) {
-            return eduChapterMapper.deleteById(chapterId);
-        } else {
-            throw new RuntimeException("删除失败，请检查！");
+        List<String> ids = new ArrayList<>();
+        if (!eduVideos.isEmpty()) {
+            for (EduVideo eduVideo : eduVideos) {
+                ids.add(eduVideo.getVideoSourceId());
+            }
         }
+        vodClient.deleteVideos(ids);
+        return eduChapterMapper.deleteById(chapterId);
+
     }
 
     @Override

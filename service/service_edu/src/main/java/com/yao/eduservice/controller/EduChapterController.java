@@ -2,8 +2,10 @@ package com.yao.eduservice.controller;
 
 
 import com.yao.commonutils.Result;
+import com.yao.eduservice.client.VodClient;
 import com.yao.eduservice.entity.EduChapter;
 import com.yao.eduservice.entity.chapter.ChapterVo;
+import com.yao.eduservice.mapper.EduChapterMapper;
 import com.yao.eduservice.service.EduChapterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

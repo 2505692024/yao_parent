@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author yaoheng
@@ -47,8 +48,28 @@ public class VodServiceImpl implements VodService {
     }
 
     @Override
+    public void deleteVideos(List<String> ids) {
+        try {
+            //循环删除多个视频
+            for (String id : ids) {
+                //初始化对象
+                DefaultAcsClient client = InitVodClient.initVodClient(ConstantPropertiesUtils.ACCESS_KEY_ID, ConstantPropertiesUtils.ACCESS_KEY_SECRET);
+                //初始化删除视频对象
+                DeleteVideoRequest request = new DeleteVideoRequest();
+                request.setVideoIds(id);
+                client.getAcsResponse(request);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("删除失败");
+        }
+
+    }
+
+    @Override
     public void deleteVideo(String id) {
         try {
+            //循环删除多个视频
             //初始化对象
             DefaultAcsClient client = InitVodClient.initVodClient(ConstantPropertiesUtils.ACCESS_KEY_ID, ConstantPropertiesUtils.ACCESS_KEY_SECRET);
             //初始化删除视频对象

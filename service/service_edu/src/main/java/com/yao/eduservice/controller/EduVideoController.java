@@ -1,14 +1,20 @@
 package com.yao.eduservice.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yao.commonutils.Result;
+import com.yao.eduservice.client.VodClient;
 import com.yao.eduservice.entity.EduVideo;
+import com.yao.eduservice.mapper.EduVideoMapper;
 import com.yao.eduservice.service.EduVideoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -25,6 +31,10 @@ import javax.annotation.Resource;
 public class EduVideoController {
     @Resource
     private EduVideoService eduVideoService;
+    @Resource
+    private EduVideoMapper eduVideoMapper;
+    @Resource
+    private VodClient vodClient;
 
     @ApiOperation(value = "/addVideo", notes = "添加小节")
     @PostMapping("/addVideo")
@@ -40,6 +50,11 @@ public class EduVideoController {
     @ApiOperation(value = "/deleteVideo", notes = "根据id删除小节")
     @DeleteMapping("/deleteVideo/{videoId}")
     public Result deleteVideo(@PathVariable String videoId) {
+        EduVideo byId = eduVideoService.getById(videoId);
+        Result result = vodClient.deleteVideo(byId.getVideoSourceId());
+        if (result.getCode() == 20001){
+            throw new RuntimeException("删除失败被熔断");
+        }
         boolean b = eduVideoService.removeById(videoId);
         if (b) {
             return Result.ok().message("删除成功");
@@ -48,7 +63,7 @@ public class EduVideoController {
         }
     }
 
-    @ApiOperation(value = "/updateVideo", notes = "根据id修改小节")
+    @ApiOperation(value = "/updateVideo", notes = "修改小节")
     @PostMapping("/updateVideo")
     public Result updateVideo(@RequestBody EduVideo eduVideo) {
         boolean b = eduVideoService.updateById(eduVideo);

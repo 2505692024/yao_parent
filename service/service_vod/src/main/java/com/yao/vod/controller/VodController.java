@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author yaoheng
@@ -27,11 +28,17 @@ public class VodController {
         String videoId = eduVodService.uploadVideo(file);
         return Result.ok().data("videoId", videoId);
     }
-
     @ApiOperation(value = "/deleteVideo", notes = "删除视频")
     @DeleteMapping("/deleteVideo/{id}")
     public Result deleteVideo(@PathVariable String id) {
         eduVodService.deleteVideo(id);
+        return Result.ok().message("删除成功");
+    }
+
+    @ApiOperation(value = "/deleteVideo", notes = "删除视频")
+    @DeleteMapping("/deleteVideos")
+    public Result deleteVideos(@RequestParam List<String> ids) {
+        eduVodService.deleteVideos(ids);
         return Result.ok().message("删除成功");
     }
 }
