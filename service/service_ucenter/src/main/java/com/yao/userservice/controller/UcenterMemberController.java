@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "登录业务", description = "登录业务")
 @RestController
 @RequestMapping("/userservice/ucenter-member")
+@CrossOrigin
 public class UcenterMemberController {
     @Resource
     private UcenterMemberService ucenterMemberService;
@@ -42,7 +43,7 @@ public class UcenterMemberController {
         return ucenterMemberService.register(registerVo);
     }
 
-    @ApiOperation(value = "/register", notes = "根据token获取用户信息")
+    @ApiOperation(value = "/getMemberInfo", notes = "根据token获取用户信息")
     @GetMapping("/getMemberInfo")
     public Result getMemberInfo(HttpServletRequest request){
         String numberIdByJwtToken = JwtUtils.getNumberIdByJwtToken(request);

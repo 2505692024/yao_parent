@@ -78,4 +78,10 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
             return Result.error().message("注册失败");
         }
     }
+
+    @Override
+    public UcenterMember getMemberByOpenId(String openid) {
+        UcenterMember ucenterMember = ucenterMemberMapper.selectOne(new QueryWrapper<UcenterMember>().eq("openid", openid));
+        return ucenterMember;
+    }
 }
